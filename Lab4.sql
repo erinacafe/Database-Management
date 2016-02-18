@@ -73,12 +73,11 @@ WHERE discount IN (	SELECT discount
 -- data can be restricted. They are good for reducing uncertainties and providing 
 -- consistency to our data. With these sort of things in our database, we can more easily 
 -- manipulate our data to make it more managable and reasonable.
--- Good example: A student database would benefit from a constraint of UNIQUE for each 
--- students' CWID. This is because the CWID is a unique number for each student, no two
--- students have or should have the same CWID. Another constraint would be NOT NULL for
--- each students' name. All students have a name as each human being in this country has
--- a name. This, however, can lead into our bad example.
--- Bad example: Although every student has a name, some of them might not have middle
--- names. Middle Name should not be a NOT NULL because of this. Another bad example would
--- be using the constraint of UNIQUE to student names. There are quite a few student names
--- that are the same and would repeat in the column.
+-- Good example: A good example of a check constraint would be if you are checking for 
+-- something that would be considered a boolean: true or false. This is good for check 
+-- because these options can go either one way or the other. There is no in between.
+-- You can also use check constraints for something like the name of a building on campus.
+-- You can have a list of each building on the Marist campus. This is good because there
+-- is a set limitation of the buildings that cannot be argued.
+-- Bad example: A bad example for a check constraint would be if you are trying to check
+-- for something with an unimaginable number of constraints for large amounts of data.
