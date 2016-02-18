@@ -1,0 +1,30 @@
+9 pts
+
+1. 
+
+Evidence looks ok.
+
+Good organization of screenshots.
+
+
+2.
+
+Excellent knowledge of the terms primary key, candidate key, and superkey.
+
+
+3.
+
+Good example of datatypes and nulls.
+
+
+4.
+
+The ``frist normal form'' has nothing to do with repeating groups or columns.
+Please check your notes and the textbook Chapter 6.1.
+
+The ``all rows must be unique'' rule is wrong in this part ``even just two rows
+that share a common field..'' Please check your class notes or
+Chapter 6.1 of the textbook.
+
+
+- Dr. Rivas
