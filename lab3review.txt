@@ -1,0 +1,23 @@
+10 pts
+
+Correct output for all queries
+Correct SQL statements
+SQL statements are readable
+
+Recommendations: 
+ To improve your readability, write queries instead of this
+  SELECT *
+  FROM products
+  WHERE city != 'Dallas' AND city != 'Duluth' AND priceUSD >= 1;
+ do it like this:
+  SELECT *
+  FROM products
+  WHERE city != 'Dallas' 
+    AND city != 'Duluth' 
+    AND priceUSD >= 1;
+
+
+
+
+
+- Dr. Rivas
