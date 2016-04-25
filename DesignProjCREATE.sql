@@ -155,7 +155,6 @@ INSERT INTO Commissions (coid, sid, aid, cuid, cname, requestdate, prepay, total
 
 
 -- Select Tables --
-
 SELECT * 
 FROM ContactInfo;
 
@@ -173,8 +172,8 @@ FROM Commissions;
 
 
 -- Create Views --
-DROP VIEW commissionsDue;
-CREATE VIEW commissionsDue AS
+-- Which commissions have a due date
+CREATE OR REPLACE VIEW commissionsDue AS
 	SELECT	co.cname AS Commission_Name,
 		a.aid AS Artist_ID,
 		cu.cuid AS Customer_ID,
@@ -190,8 +189,8 @@ CREATE VIEW commissionsDue AS
 SELECT *
 FROM commissionsDue;
 
-DROP VIEW discountPrice;
-CREATE VIEW discountPrice AS
+-- Which customers have discounts they can apply
+CREATE OR REPLACE VIEW discountPrice AS
 	SELECT	cu.cuid AS Customer_ID,
 		ci.name AS Customer_Name,
 		cu.discount AS Discount
@@ -203,12 +202,72 @@ CREATE VIEW discountPrice AS
 SELECT *
 FROM discountPrice;
 
+-- Final prices for all customers and their commissions
+CREATE OR REPLACE VIEW finalPrices AS
+	SELECT 	co.cuid AS Customer_ID, 
+		co.aid AS Artist_ID,
+		co.cname AS Commission_Name, 
+		(co.totalcost-(co.totalcost*cu.discount)) AS Final_Price
+	FROM 	Commissions co 
+	LEFT JOIN Customers cu ON co.cuid= cu.cuid
+	ORDER BY co.cuid ASC;
+SELECT *
+FROM finalPrices;
+
 
 -- Reports --
-
--- Total Income for Each Artist
-SELECT 	co.aid, ci.name, SUM(co.totalcost)
-FROM 	Commissions co, ContactInfo ci, Artists a
-WHERE 	co.aid = co.aid
-  AND	a.ciid = ci.ciid
+-- Total Income for Each Artist (with discounts)
+SELECT 	co.aid AS Artist_ID, 
+	SUM(fp.Final_Price) AS Total_Income
+FROM 	Commissions co
+LEFT JOIN finalPrices fp ON co.aid = fp.Artist_ID
+GROUP BY co.aid 	
 ORDER BY co.aid ASC;
+
+-- Total Income for Each Artist (without discounts)
+SELECT 	co.aid AS Artist_ID, 
+	SUM(co.totalcost) AS Total_Income
+FROM 	Commissions co
+LEFT JOIN Artists a ON co.aid = a.aid
+GROUP BY co.aid 	
+ORDER BY co.aid ASC;
+
+
+-- Store Procedures --
+-- ChangeName
+CREATE OR REPLACE FUNCTION changeName(text, text, REFCURSOR)
+RETURNS refcursor AS
+$$
+	DECLARE
+		old text := $1;
+		new text := $2;
+		resultset REFCURSOR := $3;
+	BEGIN
+		open resultset for
+			UPDATE ContactInfo
+			SET Name=new
+			WHERE Name=old;
+		return resultset;
+	END;
+$$ LANGUAGE plpgsql;
+
+-- Triggers --
+-- Update the commissions table
+CREATE TRIGGER addCommissions
+AFTER UPDATE ON Commissions
+ FOR EACH ROW EXECUTE PROCEDURE changeName();
+ 
+
+-- Security --
+-- Customers
+GRANT DELETE ON Commissions TO customers;
+GRANT INSERT, SELECT, UPDATE, DELETE ON ContactInfo TO artists;
+
+-- Artists
+GRANT INSERT, SELECT, UPDATE, DELETE ON Commissions TO artists;
+GRANT INSERT, SELECT, UPDATE, DELETE ON Artists TO artists;
+GRANT INSERT, SELECT, UPDATE, DELETE ON ContactInfo TO artists;
+GRANT INSERT, SELECT, UPDATE, DELETE ON Styles TO artists;
+
+-- Database Administrator Role
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;
