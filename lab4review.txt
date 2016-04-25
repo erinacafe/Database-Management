@@ -1,0 +1,58 @@
+9 pts
+
+Correct queries
+Correct SQL statements
+SQL statements are readable
+Correct output for some queries
+
+Recommendations: 
+ To improve your readability, write queries instead of this
+  SELECT DISTINCT pid
+  FROM orders
+  WHERE aid IN (	SELECT aid
+  		FROM orders
+  		WHERE cid IN (	SELECT cid
+  				FROM customers
+  				WHERE city = 'Dallas' ))
+  ORDER BY pid DESC;
+
+ do it like this:
+  SELECT DISTINCT pid
+  FROM orders
+  WHERE aid IN (SELECT aid
+                FROM orders
+                WHERE cid IN (SELECT cid
+                              FROM customers
+                              WHERE city = 'Dallas'))
+  ORDER BY pid DESC;       -- notice the indentation of subqueries
+
+
+
+7. Get all customers who have the same discount as that of any customers in
+Dallas or London
+
+Incorrect output
+- It seems like you over did it with the NOT IN part and gives incorrect
+  output.
+
+
+
+8. Tell me about check constraints: What are they? What are they good for? What
+is the advantage of putting that sort of thing inside the database? Make up
+some examples of good uses of check constraints and some examples of bad uses
+of check constraints. Explain the differences in your examples and argue your
+case.
+
+- You did not include -actual- check constraints examples, just descriptions of
+  them. 
+
+
+In general: 
+
+- Test all your SQL statements.
+
+- Make sure you read all the instructions for queries really well.
+
+
+
+- Dr. Rivas
