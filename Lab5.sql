@@ -12,13 +12,14 @@ WHERE o.aid = a.aid
 
 -- 2. Show the ids of products ordered through any agent who makes at least one order for a customer in Dallas, --
 --    sorted by pid from highest to lowest. Use joins; no subqueries.						--
+-- THIS WOULD BE VERY WRONG!
 -- This one will account for EVERY product order through any agent that made an order for a customer in Dallas --
-SELECT DISTINCT o2.pid
-FROM orders o, customers c, orders o2
-WHERE c.city = 'Dallas'
-	AND  o.aid = o2.aid
-	AND o.cid = c.cid
-ORDER BY o2.pid DESC;
+-- SELECT DISTINCT o2.pid
+-- FROM orders o, customers c, orders o2
+-- WHERE c.city = 'Dallas'
+-- 	AND  o.aid = o2.aid
+-- 	AND o.cid = c.cid
+-- ORDER BY o2.pid DESC;
 -- This one will ONLY account for the products that were ordered in that SPECIFIC order through any agent that --
 -- made an order for a customer in Dallas --
 SELECT DISTINCT o.pid
